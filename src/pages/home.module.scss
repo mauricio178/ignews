@@ -18,7 +18,7 @@
     }
 
     h1 {
-        font-size: 4.5rem;
+        font-size: 3.5rem;
         line-height: 4.5rem;
         font-weight: 900;
         margin-top: 2.5rem;
@@ -37,5 +37,9 @@
             color: var(--cyan-500);
             font-weight: bold;
         }
+    }
+
+    button {
+        margin-top: 1.5rem;
     }
 }
