@@ -1,9 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { NextApiRequest, NextApiResponse } from "next";
 import { stripe } from "../../services/stripe";
+import { fauna } from "../../services/fauna";
 import { query as q } from 'faunadb'
 import { getSession } from "next-auth/client";
-import { fauna } from "../../services/fauna";
 
 type User = {
     ref: {
@@ -15,6 +15,7 @@ type User = {
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+    
     if (req.method === 'POST') {
 
         const session = await getSession({ req })
@@ -45,8 +46,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
             customerId = stripeCustomer.id
         }
-
-
+        
+        
         const stripeCheckoutSession = await stripe.checkout.sessions.create({
             customer: customerId,
             payment_method_types: ['card'],
@@ -62,7 +63,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             success_url: process.env.STRIPE_SUCESS_URL,
             cancel_url: process.env.STRIPE_CANCEL_URL
         })
-
+        
         return res.status(200).json({ sessionId: stripeCheckoutSession.id })
     } else {
         res.setHeader('Allow', 'POST')
