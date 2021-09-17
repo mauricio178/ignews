@@ -1,0 +1,44 @@
+.container {
+    margin: 2rem 0;
+    .selectRow {
+        display: flex;
+        flex-direction: row;
+        select {
+            background: var(--gray-875);
+            border: 2px solid transparent;
+            height: 2.6rem;
+            font-size: 1.2rem;
+            font-weight: 100;
+            padding: 0.5rem 1rem;
+            color: var(--gray-300);
+            outline: 0;
+
+            &:hover {
+                cursor: pointer;
+                box-shadow: 0 0 2px var(--blue-500);
+            }
+
+            &:active {
+                border: 2px solid var(--blue-500);
+            }
+        }
+    }
+
+    .content {
+        background-color: red;
+
+        .paragrafo{
+            background-color: green;
+        }
+        .video{
+            background-color: blue;
+        }
+        .foto{
+            background-color: white;
+            color: black;
+        }
+        .link{
+            background-color: purple;
+        }
+    }
+}

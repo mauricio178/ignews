@@ -1,8 +1,10 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @next/next/link-passhref */
 import { GetServerSideProps } from "next"
 import { getSession } from "next-auth/client"
 import { RichText } from "prismic-dom"
 import Link from 'next/link'
+import k from '../../../public/images/k.jpg'
 
 import { getPrismicClient } from "../../services/prismic"
 import Head from 'next/head'
@@ -34,7 +36,8 @@ export default function Post({ post }: PostProps) {
                     <time>{post.updated}</time>
                     <div className={styles.content} dangerouslySetInnerHTML={{ __html: post.content }} />
                 </article>
-            </main>
+
+            </main> 
 
 
         </>

@@ -1,0 +1,20 @@
+.container{
+    
+    input{
+        background: var(--gray-875);
+        padding: 0.5rem 1rem;
+        border: 2px solid transparent;
+        font-size: 1.2rem;
+        width: 100%;
+        color: var(--white);
+        outline: 0;
+        &:focus{
+            background: transparent;
+            border: 2px solid var(--blue-500);
+        }
+
+        &:hover{
+            box-shadow: 0 0 2px var(--blue-500);
+        }
+    }
+}
