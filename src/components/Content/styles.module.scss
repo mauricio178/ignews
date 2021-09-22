@@ -1,8 +1,22 @@
 .container {
-    margin: 2rem 0;
-    .selectRow {
+    margin: 1rem 0;
+    border-top: 4px solid var(--gray-800);
+    padding-top: 10px;
+
+    div {
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
+
+        p {
+            font-size: 1.5rem;
+            color: var(--gray-300);
+            font-weight: 100;
+            margin-bottom: 0.5rem;
+        }
+    }
+    .selectRow {
+        display: flex;
         select {
             background: var(--gray-875);
             border: 2px solid transparent;
@@ -11,6 +25,7 @@
             font-weight: 100;
             padding: 0.5rem 1rem;
             color: var(--gray-300);
+            margin-bottom: 1rem;
             outline: 0;
 
             &:hover {
@@ -25,20 +40,87 @@
     }
 
     .content {
-        background-color: red;
+        textarea {
+            height: 2rem;
+            min-height: 10rem;
+            max-height: 10rem;
+            max-width: 100%;
+            min-width: 100%;
+            font-weight: 100;
+            font-size: 1.2rem;
+            line-height: 1.4;
+            background-color: transparent;
+            outline: 0;
+            border: 2px solid var(--blue-500);
+            padding: 1rem 1rem;
+            color: var(--white);
+        }
+    }
 
-        .paragrafo{
-            background-color: green;
+    .none {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 4rem;
+    }
+
+    .video {
+        display: flex;
+        align-items: flex-start;
+        padding: 0.5rem 0;
+
+        button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .video{
-            background-color: blue;
+
+        div {
+            p {
+                color: var(--gray-300);
+                border-bottom: 3px solid var(--gray-300);
+            }
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid var(--gray-900);
+            height: 16rem;
         }
-        .foto{
-            background-color: white;
-            color: black;
+    }
+
+    .foto {
+        display: flex;
+        align-items: flex-start;
+
+        button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .link{
-            background-color: purple;
+
+        div {
+            p {
+                color: var(--gray-300);
+                border-bottom: 3px solid var(--gray-300);
+            }
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid var(--gray-900);
+            height: 16rem;
         }
+    }
+    
+    .link {
+        div{
+            p{
+                color: var(--gray-500);
+                font-size: 1rem;
+
+            }
+        }
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }

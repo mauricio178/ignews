@@ -40,13 +40,13 @@
                 padding: 0.5rem;
                 width: 12rem;
                 display: flex;
-                position: relative;
                 align-items: center;
                 font-weight: 900;
                 background: transparent;
                 border: 2px solid var(--blue-500);
                 color: var(--blue-500);
                 margin-bottom: 1rem;
+                margin-top: 1rem;
             
                 svg {
                     color: var(--blue-500);
@@ -70,6 +70,10 @@
                 
             }
         }
+
+        .buttons{
+            border-top: 4px solid var(--gray-800);
+        }
     }
 
     .preview{
@@ -77,5 +81,14 @@
         padding: 2rem;
         margin-top: 1rem;
         margin-bottom: 1rem;
+
+        div{
+            h1{
+                margin-bottom: 0.5rem;
+            }
+            h3{
+                margin-bottom: 0.5rem;
+            }
+        }
     }
 }
