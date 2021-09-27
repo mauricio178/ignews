@@ -11,25 +11,34 @@
             align-items: center;
             font-weight: 100;
             font-size: 1.8rem;
-            
+
             svg {
                 margin-right: 1rem;
             }
         }
     }
-    
+
     .formPost {
         background-color: var(--gray-700);
         padding: 1rem 1rem;
         margin-bottom: 1rem;
         div {
+            input {
+                margin-top: 1rem;
+            }
+
+            p {
+                font-size: 1.5rem;
+                color: gray;
+                font-weight: 100;
+            }
             h3 {
                 margin-bottom: 0.5rem;
                 font-weight: 100;
                 margin-top: 1rem;
                 font-size: 1.2rem;
             }
-            
+
             div {
                 width: 100%;
                 display: flex;
@@ -47,47 +56,83 @@
                 color: var(--blue-500);
                 margin-bottom: 1rem;
                 margin-top: 1rem;
-            
+
                 svg {
                     color: var(--blue-500);
                     font-weight: 900;
                     margin-right: 0.25rem;
-                }      
-                &:hover{
+                }
+                &:hover {
                     background: var(--blue-500);
                     color: var(--white);
-                    svg{
+                    svg {
                         color: var(--white);
                     }
                 }
-                &:active{
+                &:active {
                     color: var(--gray-900);
-                    svg{
+                    svg {
                         color: var(--gray-900);
-                        
                     }
                 }
-                
             }
         }
 
-        .buttons{
+        .buttons {
             border-top: 4px solid var(--gray-800);
         }
     }
 
-    .preview{
+    .preview {
         background-color: var(--gray-700);
-        padding: 2rem;
         margin-top: 1rem;
         margin-bottom: 1rem;
 
-        div{
-            h1{
-                margin-bottom: 0.5rem;
+        .previewHeader {
+            .banerImage {
+                img {
+                    max-width: 100%;
+                }
             }
-            h3{
-                margin-bottom: 0.5rem;
+            h1 {
+                padding: 1rem 2rem;
+                color: var(--white);
+                font-weight: 700;
+                font-size: 1.8rem;
+                line-height: 1.5;
+            }
+            h2 {
+                color: var(--white);
+                font-weight: 100;
+                font-size: 1.5rem;
+                line-height: 1.5;
+                padding-bottom: 10px;
+                border-bottom: 4px solid var(--gray-300);
+            }
+        }
+
+        .previewContent {
+            padding: 0.7rem 2rem;
+
+            a {
+                color: var(--blue-500);
+                font-weight: 100;
+                &:hover {
+                    filter: brightness(0.9);
+                    cursor: pointer;
+                }
+            }
+            p {
+                color: var(--white);
+                line-height: 1.5;
+                text-align: justify;
+            }
+            h3 {
+                font-size: 1.6rem;
+                font-weight: 100;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
         }
     }

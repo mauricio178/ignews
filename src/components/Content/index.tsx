@@ -1,66 +1,89 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, SetStateAction } from 'react'
+import React, { useState, useRef } from 'react'
 import styles from './styles.module.scss'
 import { FiCheck, FiX } from "react-icons/fi";
 import { RiVideoAddLine, RiVideoFill, RiImageAddLine, RiImage2Line } from "react-icons/ri";
+import Image from 'next/image'
 import { Input } from '../Input';
 import { Carousel } from '../Carouselimg';
-import useContentHook from '../../hooks/useContentHook';
+import { useContent, ContentProps } from '../../hooks/useContentHook';
 
 
-export function Content({ id }: any) {
+export function Content(content: ContentProps) {
 
-    const [selectValue, setSelectValue] = useState(1);
     const [paragraph, setParagraph] = useState<string>('');
     const [subtitleContent, setSubtitleContent] = useState<string>('');
     const [link, setLink] = useState<string>('');
 
-    const { removeContent } = useContentHook()
+
+    const [photo, setPhoto] = useState<HTMLImageElement>();
+    const [carousel, setCarousel] = useState<HTMLImageElement>();
+
+    const { removeC, switchContent, switchType } = useContent()
 
     const list = [
-        { id: 1, name: '--' },
-        { id: 2, name: 'Parágrafo' }, // string
-        { id: 3, name: 'Video' },
-        { id: 4, name: 'Foto' },
-        { id: 5, name: 'Link' },
-        { id: 6, name: 'Carousel de Imagens' }, //build type for all 
-        { id: 7, name: 'Subtítulo' }, // string
+        { id: "-", name: '-' },
+        { id: "Paragraph", name: 'Paragrafo' },
+        { id: "Video", name: 'Video' },
+        { id: "Foto", name: 'Foto' },
+        { id: "Link", name: 'Link' },
+        { id: "Carousel", name: 'Carousel de Imagens' },
+        { id: "Subtitle", name: 'Subtítulo' },
     ];
 
-
-
     function handleSendParagraph() {
-        console.log({ paragraph })
+        switchContent(content.id, paragraph)
     }
 
     function handleSendVideo() {
         console.log("video enviado")
     }
 
-    function handleSendFoto() {
-        console.log("foto enviada")
+
+    //create new fnct 4 carousel
+    function handleSelectMultipleFiles(evt) {
+        const thisLength = evt.target.files.length;
+        if (thisLength === 0)
+            return;
+        setCarousel(evt.target.files[0])
     }
 
-    function handleSendLink() {
-        console.log({ link })
+    function handleFileSelect(evt) {
+        const thisLength = evt.target.files.length;
+        if (thisLength === 0)
+            return;
+        setPhoto(evt.target.files[0])
+    }
+
+    function handleSendPhoto() {
+        switchContent(content.id, photo)
     }
 
     function handleSendCarousel() {
-        console.log("carousel enviado")
+        switchContent(content.id, carousel)
+        console.log('carousel: ', carousel)
+    }
+
+    function handleSendLink() {
+        switchContent(content.id, link)
     }
 
     function handleSendSubtitleContent() {
-        console.log({ subtitleContent })
+        switchContent(content.id, subtitleContent)
     }
 
     return (
+
         <div className={styles.container}>
             <div>
-                <p>Selecione o tipo de Conteúdo </p>
+                <p>Conteúdo N°: {content.id}</p>
+                <h3>Selecione o tipo de Conteúdo </h3>
             </div>
 
+
             <div className={styles.selectRow}>
-                <select value={selectValue} onChange={(e: any) => setSelectValue(e.target.value)}>
+                <select onChange={(e: any) => switchType(content.id, e.target.value)}>
                     {
                         list.map((item, k) => (
                             <option key={k} value={item.id}>{item.name}</option>
@@ -68,18 +91,16 @@ export function Content({ id }: any) {
                     }
                 </select>
             </div>
-            <div id={`content${id}`} className={styles.content}>
+            <div id={`content${content.id}`} className={styles.content}>
                 {
-                    selectValue == 1 &&
-                    <>
-                        <button onClick={removeContent}>
-                            <FiX size={24} /> Remover Item
-                        </button>
+                    content.content.type === "-" &&
+                    <div>
+
                         <div className={styles.none}><p>- selecione uma opção -</p></div>
-                    </>
+                    </div>
                 }
                 {
-                    selectValue == 2 &&
+                    content.content.type === "Paragraph" &&
                     <>
                         <textarea
                             value={paragraph}
@@ -88,15 +109,13 @@ export function Content({ id }: any) {
                             required
                         />
                         <button onClick={handleSendParagraph}>
-                            <FiCheck size={24} /> Adicionar Parágrafo á Postagem
+                            <FiCheck size={24} /> Adicionar Parágrafo ao Preview
                         </button>
-                        <button onClick={removeContent}>
-                            <FiX size={24} /> Remover Item
-                        </button>
+
                     </>
                 }
                 {
-                    selectValue == 3 &&
+                    content.content.type === "Video" &&
                     <>
                         <div className={styles.video}>
                             <button>
@@ -109,92 +128,100 @@ export function Content({ id }: any) {
                             </div>
                         </div>
                         <button onClick={handleSendVideo}>
-                            <FiCheck size={24} /> Adicionar Video a Postagem
+                            <FiCheck size={24} /> Adicionar Video ao Preview
                         </button>
-                        <button onClick={removeContent}>
-                            <FiX size={24} /> Remover Item
-                        </button>
+
                     </>
                 }
                 {
-                    selectValue == 4 &&
+                    content.content.type === "Foto" &&
                     <>
                         <div className={styles.foto}>
-                            <button>
-                                Inserir Imagem - <RiImageAddLine size={28} />
-                            </button>
+                            <input type="file" accept="image/*" onChange={handleFileSelect} />
                             <div>
-                                <p>
-                                    <RiImage2Line size={72} />
-                                </p>
+                                {
+                                    (photo !== null && photo !== undefined) &&
+                                    <img
+                                        src={URL.createObjectURL(photo)}
+                                        alt={photo.name}
+                                    />
+                                }
                             </div>
                         </div>
-                        <button onClick={handleSendFoto}>
-                            <FiCheck size={24} /> Adicionar Imagem a Postagem
+                        <button onClick={handleSendPhoto}>
+                            <FiCheck size={24} /> Adicionar Imagem ao Preview
                         </button>
-                        <button onClick={removeContent}>
-                            <FiX size={24} /> Remover Item
-                        </button>
+
                     </>
                 }
                 {
-                    selectValue == 5 &&
+                    content.content.type === "Link" &&
                     <>
                         <div className={styles.link}>
                             <Input
                                 placeholder="Example: https://www.example.com.br"
                                 type="text"
                                 value={link}
-                                onchange={(e: string) => setLink(e)}
+                                onchange={(e: any) => setLink(e)}
                                 required
                             />
                         </div>
                         <button onClick={handleSendLink}>
-                            <FiCheck size={24} /> Adicionar Link a Postagem
+                            <FiCheck size={24} /> Adicionar Link ao Preview
                         </button>
-                        <button onClick={removeContent}>
-                            <FiX size={24} /> Remover Item
-                        </button>
+
                     </>
                 }
                 {
-                    selectValue == 6 &&
+                    content.content.type === "Carousel" &&
                     <>
                         <div className={styles.carousel}>
-                            <Carousel />
+                            <input type="file" accept="image/*" multiple onChange={handleSelectMultipleFiles} />
+
+                            <div>
+                                {/* how get images ?  */}
+                                
+                                {
+                                    (carousel !== null && carousel !== undefined) &&
+
+                                    <img
+                                        src={URL.createObjectURL(carousel)}
+                                        alt={carousel.name}
+                                    />
+                                }
+
+                                {/* <Carousel images={[]} postId={0} /> */}
+                            </div>
                         </div>
                         <button onClick={handleSendCarousel}>
-                            <FiCheck size={24} /> Adicionar Carousel a Postagem
+                            <FiCheck size={24} /> Adicionar Carousel ao Preview
                         </button>
-                        <button onClick={removeContent}>
-                            <FiX size={24} /> Remover Item
-                        </button>
+
                     </>
                 }
                 {
-                    selectValue == 7 &&
+                    content.content.type === "Subtitle" &&
                     <>
                         <div className={styles.subtitleContent}>
                             <Input
                                 placeholder="Subtítulo"
                                 type="text"
                                 value={subtitleContent}
-                                onchange={(e: string) => setSubtitleContent(e)}
+                                onchange={(e: any) => setSubtitleContent(e)}
                                 required
                             />
                         </div>
                         <button onClick={handleSendSubtitleContent}>
-                            <FiCheck size={24} /> Adicionar Subtítulo a Postagem
-                        </button>
-                        <button onClick={removeContent}>
-                            <FiX size={24} /> Remover Item
+                            <FiCheck size={24} /> Adicionar Subtítulo ao Preview
                         </button>
                     </>
                 }
 
+                <button onClick={() => removeC(content.id)}>
+                    <FiX size={24} /> Remover Item
+                </button>
+
             </div>
-
-
         </div>
     )
 }
