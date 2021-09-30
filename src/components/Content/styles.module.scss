@@ -140,4 +140,14 @@
         justify-content: center;
         align-items: center;
     }
+
+    .carousel{
+        div{
+            img{
+                max-width: 20rem;
+                display: flex;
+                flex-direction: row;
+            }
+        }
+    }
 }

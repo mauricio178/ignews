@@ -1,43 +1,100 @@
-.container{
-
-    p{
-        font-size: 1.5rem;
-        color: var(--gray-300);
+.container {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+  
+    width: 600PX;
+    margin: 1rem 0;
+    max-width: 100%;
+  
+    svg {
+      position: absolute;
+      width: 30px !important;
+      height: 30px !important;
+      z-index: 20;
+      background-color: var(--black);
+      border-radius: 15px;
+  
+      &:focus {
+        outline: none;
+      }
+  
+      &:hover {
+        cursor: pointer;
+      }
     }
-    
-    input{
-        background: var(--gray-875);
-        padding: 0.5rem 1rem;
-        margin-bottom: 1rem;
-        border: 2px solid transparent;
-        font-size: 1.2rem;
+  
+    svg.left {
+      left: .5rem;
+    }
+  
+    svg.right {
+      right: .5rem;
+    }
+  
+    ul.imgsDiv {
+      width: 100%;
+      height: 300px;
+      display: flex;
+      flex-direction: row;
+      position: relative;
+      overflow-x: hidden;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+  
+      li {
+        position: absolute;
         width: 100%;
-        color: var(--white);
-        outline: 0;
-        &:focus{
-            background: transparent;
-            border: 2px solid var(--blue-500);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+        transition: all .5s;
+  
+        > div {
+          max-width: 100% !important;
+          max-height: 100% !important;
+          display: flex !important;
+  
+          > img {
+            min-height: auto!important;
+            height: auto!important;
+          }
         }
-
-        &:hover{
-            box-shadow: 0 0 2px var(--blue-500);
+  
+        img {
+          max-height: 100%;
+          max-width: 100%;
         }
+  
+        video {
+          max-height: 100%;
+          max-width: 100%;
+        }
+  
+      }
+  
+      li.before {
+        transform: translateX(-100%);
+      }
+  
+      li.in {
+        transform: translateX(0px);
+      }
+  
+      li.after {
+        transform: translateX(100%);
+      }
     }
-    textarea{
-        background: var(--gray-875);
-        padding: 0.5rem 1rem;
-        border: 2px solid transparent;
-        font-size: 1.2rem;
-        width: 100%;
-        color: var(--white);
-        outline: 0;
-        &:focus{
-            background: transparent;
-            border: 2px solid var(--blue-500);
-        }
-
-        &:hover{
-            box-shadow: 0 0 2px var(--blue-500);
-        }
-    }
-}
+  }
+  

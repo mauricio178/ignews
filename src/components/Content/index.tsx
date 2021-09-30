@@ -18,7 +18,8 @@ export function Content(content: ContentProps) {
 
 
     const [photo, setPhoto] = useState<HTMLImageElement>();
-    const [carousel, setCarousel] = useState<HTMLImageElement>();
+    const [carousel, setCarousel] = useState<HTMLImageElement[]>();
+    const [video, setVideo] = useState<HTMLVideoElement>();
 
     const { removeC, switchContent, switchType } = useContent()
 
@@ -36,9 +37,6 @@ export function Content(content: ContentProps) {
         switchContent(content.id, paragraph)
     }
 
-    function handleSendVideo() {
-        console.log("video enviado")
-    }
 
 
     //create new fnct 4 carousel
@@ -46,7 +44,7 @@ export function Content(content: ContentProps) {
         const thisLength = evt.target.files.length;
         if (thisLength === 0)
             return;
-        setCarousel(evt.target.files[0])
+        setCarousel(evt.target.files)
     }
 
     function handleFileSelect(evt) {
@@ -56,13 +54,24 @@ export function Content(content: ContentProps) {
         setPhoto(evt.target.files[0])
     }
 
+    function handleVideoSelect(evt) {
+        const thisLength = evt.target.files.length;
+        if (thisLength === 0)
+            return;
+        setVideo(evt.target.files[0])
+    }
+
+    function handleSendVideo() {
+        switchContent(content.id, video)
+    }
+
     function handleSendPhoto() {
         switchContent(content.id, photo)
+        console.log(photo)
     }
 
     function handleSendCarousel() {
         switchContent(content.id, carousel)
-        console.log('carousel: ', carousel)
     }
 
     function handleSendLink() {
@@ -118,13 +127,14 @@ export function Content(content: ContentProps) {
                     content.content.type === "Video" &&
                     <>
                         <div className={styles.video}>
-                            <button>
-                                Inserir Video<RiVideoAddLine size={28} />
-                            </button>
+                            <input type="file" accept="video/*" onChange={handleVideoSelect} />
                             <div>
-                                <p>
-                                    <RiVideoFill size={72} />
-                                </p>
+                                {
+                                    (video !== null && video !== undefined) &&
+                                    <video width="320" height="240" controls>
+                                        <source src={URL.createObjectURL(video)}/>
+                                    </video>
+                                }
                             </div>
                         </div>
                         <button onClick={handleSendVideo}>
@@ -151,7 +161,6 @@ export function Content(content: ContentProps) {
                         <button onClick={handleSendPhoto}>
                             <FiCheck size={24} /> Adicionar Imagem ao Preview
                         </button>
-
                     </>
                 }
                 {
@@ -169,7 +178,6 @@ export function Content(content: ContentProps) {
                         <button onClick={handleSendLink}>
                             <FiCheck size={24} /> Adicionar Link ao Preview
                         </button>
-
                     </>
                 }
                 {
@@ -177,26 +185,16 @@ export function Content(content: ContentProps) {
                     <>
                         <div className={styles.carousel}>
                             <input type="file" accept="image/*" multiple onChange={handleSelectMultipleFiles} />
-
                             <div>
-                                {/* how get images ?  */}
-                                
                                 {
                                     (carousel !== null && carousel !== undefined) &&
-
-                                    <img
-                                        src={URL.createObjectURL(carousel)}
-                                        alt={carousel.name}
-                                    />
+                                    <Carousel images={carousel} />
                                 }
-
-                                {/* <Carousel images={[]} postId={0} /> */}
                             </div>
                         </div>
                         <button onClick={handleSendCarousel}>
                             <FiCheck size={24} /> Adicionar Carousel ao Preview
                         </button>
-
                     </>
                 }
                 {

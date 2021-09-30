@@ -5,20 +5,25 @@ import { IoMdArrowDropleftCircle } from 'react-icons/io';
 import { IoMdArrowDroprightCircle } from 'react-icons/io';
 
 import styles from './styles.module.scss';
+import { useContent } from "../../hooks/useContentHook";
 
 type CarouselProps = {
-    images: Image[],
-    postId: number
+    images: HTMLImageElement[],
 }
 
-type Image = string[]
-
-export function Carousel({ images, postId }: CarouselProps) {
-
+export function Carousel({ images }: CarouselProps) {
 
     const contentRef = useRef<HTMLUListElement>(null)
 
     const [actual, setActual] = useState<number>(0);
+
+    const { content } = useContent()
+
+    // const fileInfo = content.map((data) => {
+    //     Array.from(data.content).forEach((file) => {
+    //         console.log(file, "file")
+    //     })
+    // })
 
     function handleNext() {
 
@@ -42,12 +47,6 @@ export function Carousel({ images, postId }: CarouselProps) {
 
     return (
         <div className={styles.container}>
-
-            {/* <img
-                src={URL.createObjectURL(photo)}
-                alt={photo.name}
-            /> */}
-
             {
                 actual > 0 && (
                     <IoMdArrowDropleftCircle
@@ -62,24 +61,32 @@ export function Carousel({ images, postId }: CarouselProps) {
                 className={styles.imgsDiv}
                 ref={contentRef}
             >
+                {
+                    (content !== null && content !== undefined) &&
+                    <>
+                        {
+                            content.map((data, k) => {
+                                return (
+                                    <>
+                                        {
+                                            (data.content !== null && data.content !== undefined) &&
 
-                {/* {
-                    images.map((postsData, k) => {
-                        return (
-                            <li
-                                className={k === 0 ? styles.in : styles.after}
-                                key={k}
-                            >
-                                <p>img here</p>
-                                <Image
-                                    src={`${storage}blog/${postId}/${postsData[0]}`}
-                                    alt={postsData[1]}
-                                    layout="fill"
-                                />
-                            </li>
-                        )
-                    })
-                } */}
+                                            Array.from(data.content).forEach((file, k) => {
+                                                console.log(file)
+                                                return (
+                                                    <div key={k}>
+                                                        <img src={URL.createObjectURL(file)} alt={data.content.name} />
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </>
+                                )
+                            })
+                        }
+                    </>
+                }
+
             </ul>
             {
                 actual < (images.length - 1) && (

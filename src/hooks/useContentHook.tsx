@@ -80,7 +80,6 @@ function ContentProvider({ children }: ContentProviderProps) {
         setContent(oldValue => {
             var filtered = oldValue.filter((data) => {
                 if (data.id === id) {
-                    console.log("console content > ", data)
                     data.content = content
                 }
                 return data
