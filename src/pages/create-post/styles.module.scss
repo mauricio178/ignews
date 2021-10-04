@@ -4,12 +4,12 @@
 
     .title {
         background-color: var(--gray-700);
-        padding: 2rem;
         margin-bottom: 1rem;
         h2 {
             display: flex;
             align-items: center;
             font-weight: 100;
+            padding: 1rem;
             font-size: 1.8rem;
 
             svg {
@@ -24,7 +24,7 @@
         margin-bottom: 1rem;
         div {
             input {
-                margin-top: 1rem;
+                margin-bottom: 1rem;
             }
 
             p {
@@ -33,9 +33,7 @@
                 font-weight: 100;
             }
             h3 {
-                margin-bottom: 0.5rem;
                 font-weight: 100;
-                margin-top: 1rem;
                 font-size: 1.2rem;
             }
 
@@ -83,41 +81,68 @@
         }
     }
 
+    h2{
+        font-weight: 100;
+        font-size: 1.8rem;
+        svg {
+            margin-right: 0.5rem;
+        }
+    }
+
     .preview {
-        background-color: var(--gray-700);
+        background-color: var(--white);
         margin-top: 1rem;
         margin-bottom: 1rem;
 
+        .null{
+            height: 4rem;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            p{
+                color: black;
+            }
+        }
+
+
         .previewHeader {
-            .banerImage {
-                img {
-                    max-width: 100%;
-                }
-            }
+            height: 20rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin-bottom: 1rem;
+            background-blend-mode: color;
+            
             h1 {
-                padding: 1rem 2rem;
-                color: var(--white);
-                font-weight: 700;
-                font-size: 1.8rem;
-                line-height: 1.5;
-            }
-            h2 {
-                padding: 0rem 2rem;
+                margin: 0rem 4rem;
                 color: var(--white);
                 font-weight: 100;
-                font-size: 1.5rem;
+                font-size: 2.5rem;
                 line-height: 1.5;
-                padding-bottom: 10px;
-                border-bottom: 4px solid var(--gray-300);
+                border-bottom: 2px solid var(--gray-300);
+                padding-bottom: 0.5rem;
+            }
+            h2 {
+                padding: 0rem 4rem;
+                color: var(--white);
+                font-weight: 100;
+                font-size: 2rem;
+                line-height: 1.5;
+            }
+            p{
+                padding: 0rem 4rem;
+                margin-top: 0.5rem;  
             }
         }
 
         .previewContent {
-            padding: 1rem 2rem;
+            padding: 0rem 2rem;
             display: flex;
             justify-content: center;
             align-items: center;
 
+        
             .link {
                 a {
                     color: var(--blue-500);
@@ -131,12 +156,14 @@
             .paragraph {
                 p {
                     font-size: 1rem;
-                    color: var(--white);
+                    color: var(--gray-900);
                     line-height: 1.5;
                     text-align: justify;
+                    margin: 0rem 2rem;
                 }
             }
             .video {
+                margin-bottom: 2rem;
                 video {
                 }
             }
@@ -144,6 +171,8 @@
                 h3 {
                     font-size: 1.8rem;
                     font-weight: 100;
+                    color: var(--gray-900);
+
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -152,10 +181,34 @@
 
             .foto {
                 img {
+                    max-width: 30rem;
                 }
             }
 
             .carousel {
+            }
+        }
+
+        .tags{
+            background-color: black;
+            height: 4rem;
+            margin-top: 2rem;
+            padding: 0rem 4rem;
+            display: flex;
+            align-items: center;
+            p{  
+                color: white;
+                font-size: 1rem;
+                
+                span{
+                    color: var(--gray-300);
+                    font-size: 1rem;
+
+                    &:hover{
+                        color: var(--blue-500);
+                        cursor: pointer;
+                    }
+                }
             }
         }
     }

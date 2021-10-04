@@ -2,8 +2,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState, useRef } from 'react'
 import styles from './styles.module.scss'
-import { FiCheck, FiX } from "react-icons/fi";
-import { RiVideoAddLine, RiVideoFill, RiImageAddLine, RiImage2Line } from "react-icons/ri";
+import { FiCheck, FiFilm, FiImage, FiX } from "react-icons/fi";
+import { BiCarousel } from "react-icons/bi";
 import Image from 'next/image'
 import { Input } from '../Input';
 import { Carousel } from '../Carouselimg';
@@ -17,9 +17,9 @@ export function Content(content: ContentProps) {
     const [link, setLink] = useState<string>('');
 
 
-    const [photo, setPhoto] = useState<HTMLImageElement>();
+    const [photo, setPhoto] = useState<HTMLImageElement[]>();
     const [carousel, setCarousel] = useState<HTMLImageElement[]>();
-    const [video, setVideo] = useState<HTMLVideoElement>();
+    const [video, setVideo] = useState<HTMLVideoElement[]>();
 
     const { removeC, switchContent, switchType } = useContent()
 
@@ -37,28 +37,48 @@ export function Content(content: ContentProps) {
         switchContent(content.id, paragraph)
     }
 
-
-
-    //create new fnct 4 carousel
     function handleSelectMultipleFiles(evt) {
         const thisLength = evt.target.files.length;
         if (thisLength === 0)
             return;
-        setCarousel(evt.target.files)
+
+        var array = []
+
+        for (let i = 0; i < thisLength; i++) {
+            array.push(evt.target.files[i])
+        }
+
+        setCarousel(array)
+
     }
 
     function handleFileSelect(evt) {
         const thisLength = evt.target.files.length;
         if (thisLength === 0)
             return;
-        setPhoto(evt.target.files[0])
+
+        var array = []
+
+        for (let i = 0; i < thisLength; i++) {
+            array.push(evt.target.files[i])
+            console.log(evt.target.files[i])
+        }
+
+        setPhoto(array)
     }
 
     function handleVideoSelect(evt) {
         const thisLength = evt.target.files.length;
         if (thisLength === 0)
             return;
-        setVideo(evt.target.files[0])
+
+        var array = []
+
+        for (let i = 0; i < thisLength; i++) {
+            array.push(evt.target.files[i])
+        }
+
+        setVideo(array)
     }
 
     function handleSendVideo() {
@@ -67,7 +87,6 @@ export function Content(content: ContentProps) {
 
     function handleSendPhoto() {
         switchContent(content.id, photo)
-        console.log(photo)
     }
 
     function handleSendCarousel() {
@@ -104,7 +123,6 @@ export function Content(content: ContentProps) {
                 {
                     content.content.type === "-" &&
                     <div>
-
                         <div className={styles.none}><p>- selecione uma opção -</p></div>
                     </div>
                 }
@@ -130,10 +148,22 @@ export function Content(content: ContentProps) {
                             <input type="file" accept="video/*" onChange={handleVideoSelect} />
                             <div>
                                 {
-                                    (video !== null && video !== undefined) &&
-                                    <video width="320" height="240" controls>
-                                        <source src={URL.createObjectURL(video)}/>
-                                    </video>
+                                    (video !== null && video !== undefined) ?
+                                        <>
+                                            {
+                                                video.map((data, k) => {
+                                                    return (
+                                                        <video key={k} width="320" height="240" controls>
+                                                            <source src={URL.createObjectURL(data)} />
+                                                        </video>
+                                                    )
+                                                })
+                                            }
+                                        </>
+                                        :
+                                        <div>
+                                            <FiFilm size={45}/>
+                                        </div>
                                 }
                             </div>
                         </div>
@@ -150,11 +180,28 @@ export function Content(content: ContentProps) {
                             <input type="file" accept="image/*" onChange={handleFileSelect} />
                             <div>
                                 {
-                                    (photo !== null && photo !== undefined) &&
-                                    <img
-                                        src={URL.createObjectURL(photo)}
-                                        alt={photo.name}
-                                    />
+                                    (photo !== null && photo !== undefined) ?
+                                    <>
+                                        {
+                                            photo.map((data, k) => {
+                                                console.log(data, "this PHOTO")
+                                                return (
+                                                    <div key={k}>
+                                                        <img
+                                                            src={URL.createObjectURL(data)}
+                                                            alt={data.name}
+                                                        />
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </>
+                                    :
+                                    <div>
+                                        <FiImage size={45}/>
+                                    </div>
+
+
                                 }
                             </div>
                         </div>
@@ -187,8 +234,13 @@ export function Content(content: ContentProps) {
                             <input type="file" accept="image/*" multiple onChange={handleSelectMultipleFiles} />
                             <div>
                                 {
-                                    (carousel !== null && carousel !== undefined) &&
+                                    (carousel !== null && carousel !== undefined) ?
                                     <Carousel images={carousel} />
+                                    :
+                                    <div>
+                                        <BiCarousel size={45}/>
+                                    </div>
+
                                 }
                             </div>
                         </div>

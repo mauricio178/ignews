@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from 'next/image';
 import { IoMdArrowDropleftCircle } from 'react-icons/io';
 import { IoMdArrowDroprightCircle } from 'react-icons/io';
@@ -19,11 +19,11 @@ export function Carousel({ images }: CarouselProps) {
 
     const { content } = useContent()
 
-    // const fileInfo = content.map((data) => {
-    //     Array.from(data.content).forEach((file) => {
-    //         console.log(file, "file")
-    //     })
-    // })
+    useEffect(() => {
+        console.log(content, "content")
+        console.log(images, "image")
+
+    }, [content])
 
     function handleNext() {
 
@@ -61,31 +61,20 @@ export function Carousel({ images }: CarouselProps) {
                 className={styles.imgsDiv}
                 ref={contentRef}
             >
-                {
-                    (content !== null && content !== undefined) &&
-                    <>
-                        {
-                            content.map((data, k) => {
-                                return (
-                                    <>
-                                        {
-                                            (data.content !== null && data.content !== undefined) &&
 
-                                            Array.from(data.content).forEach((file, k) => {
-                                                console.log(file)
-                                                return (
-                                                    <div key={k}>
-                                                        <img src={URL.createObjectURL(file)} alt={data.content.name} />
-                                                    </div>
-                                                )
-                                            })
-                                        }
-                                    </>
-                                )
-                            })
-                        }
-                    </>
+
+                {
+                    images.map((data, k) => {
+                        return (
+                            <li key={k} className={k === 0 ? styles.in : styles.after}>
+                                <img src={URL.createObjectURL(data)} alt={data.name} />
+                            </li>
+                        )
+                    })
+
                 }
+
+
 
             </ul>
             {
