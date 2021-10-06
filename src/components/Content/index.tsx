@@ -15,8 +15,6 @@ export function Content(content: ContentProps) {
     const [paragraph, setParagraph] = useState<string>('');
     const [subtitleContent, setSubtitleContent] = useState<string>('');
     const [link, setLink] = useState<string>('');
-
-
     const [photo, setPhoto] = useState<HTMLImageElement[]>();
     const [carousel, setCarousel] = useState<HTMLImageElement[]>();
     const [video, setVideo] = useState<HTMLVideoElement[]>();
@@ -184,7 +182,6 @@ export function Content(content: ContentProps) {
                                     <>
                                         {
                                             photo.map((data, k) => {
-                                                console.log(data, "this PHOTO")
                                                 return (
                                                     <div key={k}>
                                                         <img

@@ -6,16 +6,16 @@ import React, { useEffect, useState } from 'react'
 import { Input } from '../../components/Input'
 import { FiEdit3, FiPlus, FiCheck, FiX, FiWatch, FiTag, FiBookOpen } from "react-icons/fi";
 import { Content } from '../../components/Content';
-import { ContentProps, useContent } from '../../hooks/useContentHook'
+import { useContent } from '../../hooks/useContentHook'
+import { PostProps } from '../../hooks/postHook'
 import { Carousel } from '../../components/Carouselimg'
-import { url } from 'inspector'
+import { usePost } from '../../hooks/postHook'
 
-export default function CreatePost(data: ContentProps) {
+export default function CreatePost(post: PostProps) {
 
     const [title, setTitle] = useState<string>('');
     const [subtitle, setSubtitle] = useState<string>('');
     const [tags, setTags] = useState<string>('');
-
     const [baner, setBaner] = useState<HTMLImageElement>();
 
     // pegando a data atual (somente para visual de preview)
@@ -26,8 +26,43 @@ export default function CreatePost(data: ContentProps) {
     var meses = new Array('Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro')
 
     const { addC, content, switchContent } = useContent()
+    const { addPost } = usePost()
 
-    // tratando erros e inconsistências 21/09
+    function handleSendPost() {
+        try {
+            // if (title == '' || title.length < 5) {
+            //     alert("Porfavor, insira um Titulo válido!");
+            //     return false
+            // }
+            // if (subtitle == '' || subtitle.length < 5) {
+            //     alert("Porfavor, insira um Subtítulo!");
+            //     return false
+            // }
+
+            // if (baner === null || baner === undefined) {
+            //     alert("Porfavor, insira um Imagem de Capa!");
+            //     return false
+            // }
+
+            alert('Post Enviado')
+                                    
+            let date = [dia, mes, ano]
+            
+            var postInfo = { title, 
+            subtitle,
+            tags,
+            content,
+            baner,
+            date }
+            
+            addPost(postInfo)
+
+
+        } catch {
+            console.log("erro ao enviar post")
+        }
+
+    }
 
     function handleSelectBaner(evt) {
         const thisLength = evt.target.files.length;
@@ -37,19 +72,7 @@ export default function CreatePost(data: ContentProps) {
     }
 
     function handleRemoveBaner() {
-        setBaner(undefined)
-    }
-
-    function handleSendPost() {
-        if (title == '' || title.length < 5) {
-            alert("Porfavor, insira um Titulo válido!");
-            return false
-        }
-        if (subtitle == '' || subtitle.length < 5) {
-            alert("Porfavor, insira um Subtítulo");
-            return false
-        }
-
+        setBaner(null)
     }
 
     return (
@@ -115,13 +138,10 @@ export default function CreatePost(data: ContentProps) {
                         <button onClick={addC}>
                             <FiPlus size={24} /> Adicionar Conteúdo
                         </button>
-                        <button onClick={handleSendPost}>
-                            <FiCheck size={24} /> Finalizar Postagem
-                        </button>
                     </div>
                 </div>
 
-                <h2><FiBookOpen size={24}/> Preview da Postagem</h2>
+                <h2><FiBookOpen size={24} /> Preview da Postagem</h2>
 
                 <div className={styles.preview}>
                     {
@@ -129,8 +149,6 @@ export default function CreatePost(data: ContentProps) {
                             <>
                                 <article className={styles.previewHeader} style={{
                                     background: `url(${URL.createObjectURL(baner)}) center center rgba(0,0,0,0.7)`,
-                                    backgroundSize: 'cover'
-
                                 }}
                                 >
                                     <h1>{title}</h1>
@@ -227,6 +245,9 @@ export default function CreatePost(data: ContentProps) {
                     }
 
                 </div>
+                <button onClick={handleSendPost}>
+                    <FiCheck size={24} /> Finalizar Postagem
+                </button>
             </main>
         </>
     )

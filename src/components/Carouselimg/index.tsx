@@ -17,14 +17,6 @@ export function Carousel({ images }: CarouselProps) {
 
     const [actual, setActual] = useState<number>(0);
 
-    const { content } = useContent()
-
-    useEffect(() => {
-        console.log(content, "content")
-        console.log(images, "image")
-
-    }, [content])
-
     function handleNext() {
 
         if (contentRef.current !== null) {

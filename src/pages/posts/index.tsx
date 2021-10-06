@@ -1,26 +1,14 @@
-import { GetStaticProps } from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
-import { getPrismicClient } from '../../services/prismic'
 import styles from './styles.module.scss'
-import Prismic from '@prismicio/client'
-import { RichText } from 'prismic-dom'
-import React from 'react'
+import React, { useState } from 'react'
+import { usePost } from '../../hooks/postHook'
+import { useContent } from '../../hooks/useContentHook'
 
-type Post = {
-    slug: string
-    title: string
-    excerpt: string
-    updatedAt: string
+export default function Posts() {
 
-}
-
-interface PostsProps {
-    posts: Post[]
-}
-
-
-export default function Posts({ posts }: PostsProps) {
+    const { removePost } = usePost()
+    
+    const postInfo = JSON.parse(localStorage.getItem('dados'))
 
     return (
         <>
@@ -32,48 +20,27 @@ export default function Posts({ posts }: PostsProps) {
 
             <main className={styles.container}>
                 <div className={styles.posts}>
-                    {posts.map((post, k) => (
-                        <Link key={k} href={`/posts/${post.slug}`}>
-                            <a>
-                                <time> {post.updatedAt} </time>
-                                <strong> {post.title} </strong>
-                                <p> {post.excerpt} </p>
-                            </a>
-                        </Link>
-                    ))}
+                    <ul>
+                        {
+                            postInfo.map((data, k) => {
+                                return (
+                                    <div key={k}>
+                                        <li>
+                                            <a>
+                                                <p>{data.date} - Nº {data.id}</p>
+                                                <h1>{data.title}</h1>
+                                                <h3>{data.subtitle}</h3>
+                                                <strong>{data.tags}</strong>
+                                            </a>
+                                        </li>
+                                        <button onClick={() => removePost(data.id)}>Excluir Post</button>
+                                    </div>
+                                )
+                            })
+                        }
+                    </ul>
                 </div>
             </main>
         </>
     )
-}
-
-export const getStaticProps: GetStaticProps = async () => {
-
-    const prismic = getPrismicClient()
-
-    const response = await prismic.query([
-        Prismic.predicates.at('document.type', 'post')
-    ], {
-        fetch: ['post.title', 'post.content'],
-        pageSize: 100,
-    })
-    const posts = response.results.map(post => {
-        return {
-            slug: post.uid,
-            title: RichText.asText(post.data.title),
-            // encontre um parágrafo e exiba SE NÃO exiba uma string vazia 
-            excerpt: post.data.content.find(content => content.type === 'paragraph')?.text ?? '',
-            updatedAt: new Date(post.last_publication_date).toLocaleDateString('pt-BR', {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric'
-            })
-        }
-    })
-
-    return {
-        props: {
-            posts
-        }
-    }
 }
