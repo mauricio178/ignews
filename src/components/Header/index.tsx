@@ -1,33 +1,28 @@
-/* eslint-disable @next/next/no-img-element */
-import React from 'react'
-import { ActiveLink } from '../ActiveLink/indes'
-import { ButtonSignIn } from '../ButtonSignIn'
 import styles from './styles.module.scss'
-import { FiPlus, FiCoffee, FiHome } from "react-icons/fi";
+import React from 'react'
+import { FiMenu } from "react-icons/fi";
+import logo from '../../../public/logo.png'
+import Image from 'next/image'
+
 
 export function Header() {
 
-
     return (
-        <header className={styles.headerContainer}>
-            <div className={styles.headerContent}>
-                <img src="/images/ig.new.png" alt="ig.news" width="170" height="70" />
+        <div className={styles.container}>
+            <div className={styles.left}>
+                <FiMenu size={38}/>
+                <Image src={logo} alt="logo" width={70} height={40}/>
+            </div>
+            <div className={styles.navigation}>
                 <nav>
-                    <ActiveLink activeClassName= {styles.active} href="/" >
-                        <a><FiHome/>Home</a>
-                    </ActiveLink>
-
-                    <ActiveLink  activeClassName= {styles.active} href="/posts" >
-                        <a><FiCoffee size={22}/>Posts</a>
-                    </ActiveLink>
-
-                    <ActiveLink  activeClassName= {styles.active} href="/create-post" >
-                        <a><FiPlus size={22}/> Novo Post</a>
-                    </ActiveLink>
+                    <ul>
+                        <li>About Me</li>
+                        <li>Portfólio</li>
+                        <li>Contact</li>
+                    </ul>
                 </nav>
 
-                <ButtonSignIn />
             </div>
-        </header>
+        </div>
     );
 }

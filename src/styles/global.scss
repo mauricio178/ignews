@@ -4,48 +4,51 @@
     box-sizing: border-box;
 }
 
-:root{
-    --white: #FFFFFF;
-    
-    --gray-50: #ededed;
-    --gray-100: #e1e1e6;
-    --gray-300: #a8a8b3;
-    --gray-500: #8e8e91;
-    --gray-700: #323238;
-    --gray-800: #434348;
-    --gray-850: #293437;
-    --gray-875: #28282b;
-    --gray-900: #232327;
+:root {
+    --white: #f2f2f2;
 
-    --black: #000000;
+    --gray-300: #c2c2c2;
+    --gray-500: #545454;
+    --gray-800: #353535;
 
-    --blue-500: #577ed3;
+    --blue-500: #25afff;
 
-    --green-500: #21b348;
+    --red-700: #9e1313;
 
-    --cyan-500: #61dafb;
-    --yellow-500: #ffdc17;
+    --yellow-300: #e1a716;
 }
 
-@media(max-width: 1080px) {
+@media (max-width: 1080px) {
     html {
         font-size: 93.75%;
     }
 }
 
-@media(max-width: 720px) {
+@media (max-width: 720px) {
     html {
         font-size: 87.5%;
     }
 }
 
 body {
-    background: var(--gray-900);
-    color: var(--white);
+    width: 100vw;
+    height: 100vh;
+    background-image: url('/background1.png');
+    background-size: cover;
 }
 
-body, input, textarea, select, button {
-    font: 400 1rem "Roboto", sans-serif;
+body,
+input,
+textarea,
+select,
+button,
+p,
+h1,
+h2,
+h3 {
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: 400;
+
 }
 
 button {

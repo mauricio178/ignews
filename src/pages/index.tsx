@@ -1,60 +1,26 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable @next/next/no-img-element */
-import Head from 'next/head';
-import { GetStaticProps } from 'next'
-import { ButtonSubscribe } from '../components/ButtonSubscribe';
+import React from 'react'
 import styles from './home.module.scss'
-import { stripe } from '../services/stripe';
+import background from '../../public/background1.png'
 
+export default function Home() {
 
-interface HomeProps {
-  product: {
-    priceId: string
-    amount: number
-  }
-}
-
-
-export default function Home({product}: HomeProps) {
-  
   return (
-    <>
-      <Head>
-        <title>Home | IG-News</title>
-      </Head>
-      <main className={styles.contentContainer}>
-        <section className={styles.hero}>
-          <span>
-            👏 Olá, Bem-vindo!
-          </span>
-          <h1>Novidades sobre o mundo de <span>React</span> e <br/> 
-          <span>React-Native</span> .</h1>
-          <p>Adiquira já seu acesso e mantenha-se atualizado<br/>
-          Apenas <span>{product.amount} por Ano </span>
-          </p>
-          <ButtonSubscribe priceId={product.priceId}/>
+    <div className={styles.container} style={{
+      background: `url(${background}) center center rgba(0,0,0,0.9)`,
+      backgroundSize: 'cover'
+
+    }}>
+      <div className={styles.welcome}>
+        <h1><strong>hy!</strong> <br/>my name is <span>mauricio rodrigues</span></h1>
+        <h2>and i am a <span>frontend developer.</span></h2>
+      </div>
+      <div className={styles.aboutme}>
+        <section>
+          <h1>About Me</h1>
         </section>
-        <img src="/images/img2.png" alt="codding" />
-      </main>
-
-    </>
+      </div>
+    </div>
   )
-}
-
-export const getStaticProps: GetStaticProps = async () => {
-  const price = await stripe.prices.retrieve('price_1JN0EADM77hknLOCadDNPV01')
-
-  const product = {
-    priceId: price.id,
-    amount: new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price.unit_amount / 100),
-  }
-
-  return{
-    props: {
-      product,
-    },
-    revalidate: 60 * 60 * 24  // 24 Hours
-  }
 }
