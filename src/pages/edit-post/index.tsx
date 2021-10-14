@@ -5,12 +5,11 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { Input } from '../../components/Input'
 import { FiEdit3, FiPlus, FiCheck, FiX, FiWatch, FiTag, FiBookOpen } from "react-icons/fi";
-import { Content } from '../../components/Content';
+import { ContentEdit } from '../../components/ContentEdit';
 import { useContent } from '../../hooks/useContentHook'
 import { PostProps } from '../../hooks/postHook'
 import { Carousel } from '../../components/Carouselimg'
 import { usePost } from '../../hooks/postHook'
-import api from '../../services/api'
 
 export type PostFormData = {
     title: string
@@ -22,11 +21,10 @@ export type PostFormData = {
 
 export default function CreatePost() {
 
-    const [title, setTitle] = useState<string>('');
-    const [subtitle, setSubtitle] = useState<string>('');
-    const [tags, setTags] = useState<string>('');
+    // const [title, setTitle] = useState<string>('');
+    // const [subtitle, setSubtitle] = useState<string>('');
+    // const [tags, setTags] = useState<string>('');
     const [baner, setBaner] = useState<HTMLImageElement>();
-    const [data, setData] = useState();
 
     // pegando a data atual (somente para visual de preview)
     var dataAtual = new Date()
@@ -35,70 +33,35 @@ export default function CreatePost() {
     var ano = dataAtual.getFullYear()
     var meses = new Array('Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro')
 
-    const { addC, content } = useContent()
-    const { addPost } = usePost()
+    const { content, addC } = useContent()
+    const { editPostInfo, updatePost, post } = usePost()
 
-    function handleSendPost() {
+    function handleSaveChanges() {
         try {
-            // if (title == '' || title.length < 5) {
-            //     alert("Porfavor, insira um Titulo válido!");
-            //     return false
-            // }
-            // if (subtitle == '' || subtitle.length < 5) {
-            //     alert("Porfavor, insira um Subtítulo!");
-            //     return false
-            // }
+            updatePost(post)
 
-            // if (baner === null || baner === undefined) {
-            //     alert("Porfavor, insira um Imagem de Capa!");
-            //     return false
-            // }
-
-
-            var date = [dia, mes, ano]
-
-            var postInfo = {
-                title,
-                subtitle,
-                tags,
-                content,
-                baner,
-                date
-            }
-
-            addPost(postInfo)
-
-
-
-        } catch {
-            console.log("erro ao enviar post")
+        } catch (err) {
+            console.log("erro ao enviar", err)
         }
-
-        alert('Post Enviado')
-        // console.log(postInfo, "postInfo")
+        alert("Post Editado!")
     }
 
     function handleSelectBaner(evt) {
         const thisLength = evt.target.files.length;
-        if (thisLength === 0)
+        if (thisLength === 0) {
             return;
-        setBaner(evt.target.files[0])
+        }
+        editPostInfo("baner", evt.target.files[0])
     }
 
     function handleRemoveBaner() {
-        setBaner(null)
+        setBaner(null);
     }
 
     useEffect(() => {
-        api
-          .get("blog/post")
-          .then((response) => {setData(response.data)})
-          .catch((err) => {
-            console.error("ops! ocorreu um erro" + err);
-          });
-
-          console.log(data)
-      }, []);
+        console.log(post, "post")
+        console.log(content, "content")
+    }, [])
 
     return (
         <>
@@ -109,18 +72,16 @@ export default function CreatePost() {
             </Head>
 
             <main className={styles.container}>
-
                 <div className={styles.title}>
-                    <h2><FiEdit3 /> Escrever Nova Postagem</h2>
+                    <h2><FiEdit3 /> Editar Postagem Nº {post.id}</h2>
                 </div>
                 <div className={styles.formPost}>
                     <div>
-
                         <Input
                             placeholder="Título"
                             type="text"
-                            value={title}
-                            onchange={(e: string) => setTitle(e)}
+                            value={post.title}
+                            onchange={(e: string) => editPostInfo("title", e)}
                             required
                         />
                     </div>
@@ -128,8 +89,8 @@ export default function CreatePost() {
                         <Input
                             placeholder="Sub-Título"
                             type="text"
-                            value={subtitle}
-                            onchange={(e: string) => setSubtitle(e)}
+                            value={post.subtitle}
+                            onchange={(e: string) => editPostInfo("subtitle", e)}
                             required
                         />
                     </div>
@@ -137,7 +98,7 @@ export default function CreatePost() {
                         <p>Imagem de Capa da Postagem</p>
                         <input type="file" accept="image/*" onChange={handleSelectBaner} />
                         {
-                            baner !== null && baner !== undefined &&
+                            post.baner !== null && post.baner !== undefined &&
                             <button onClick={handleRemoveBaner}>Remover Baner</button>
                         }
                     </div>
@@ -145,8 +106,8 @@ export default function CreatePost() {
                         <Input
                             placeholder="Tags da Postagem"
                             type="text"
-                            value={tags}
-                            onchange={(e: string) => setTags(e)}
+                            value={post.tags}
+                            onchange={(e: string) => editPostInfo("tags", e)}
                             required
                         />
                     </div>
@@ -155,7 +116,7 @@ export default function CreatePost() {
                             content.map((data, k) => {
                                 return (
                                     <div key={k}>
-                                        <Content content={data} id={data.id} />
+                                        <ContentEdit content={data.type} id={data.id} />
                                     </div>
                                 )
                             })
@@ -172,14 +133,14 @@ export default function CreatePost() {
 
                 <div className={styles.preview}>
                     {
-                        (baner !== null && baner !== undefined) ?
+                        (post.baner !== null && post.baner !== undefined && post.baner !== {}) ?
                             <>
                                 <article className={styles.previewHeader} style={{
-                                    background: `url(${URL.createObjectURL(baner)}) center center rgba(0,0,0,0.7)`,
+                                    background: `url(${URL.createObjectURL(post.baner)}) center center rgba(0,0,0,0.7)`,
                                 }}
                                 >
-                                    <h1>{title}</h1>
-                                    <h2>{subtitle}</h2>
+                                    <h1>{post.title}</h1>
+                                    <h2>{post.subtitle}</h2>
                                     <p><FiWatch size={18} /> Publicado em: <strong>{dia} de {meses[mes]} de {ano}</strong></p>
                                 </article>
                                 {
@@ -261,7 +222,7 @@ export default function CreatePost() {
                                 }
                                 <div className={styles.tags}>
                                     <p>
-                                        <FiTag size={16} /> Tags: <span>{tags}</span>
+                                        <FiTag size={16} /> Tags: <span>{post.tags}</span>
                                     </p>
                                 </div>
                             </>
@@ -272,8 +233,8 @@ export default function CreatePost() {
                     }
 
                 </div>
-                <button onClick={handleSendPost}>
-                    <FiCheck size={24} /> Finalizar Postagem
+                <button onClick={handleSaveChanges}>
+                    <FiCheck size={24} /> Salvar Alterações
                 </button>
             </main>
         </>

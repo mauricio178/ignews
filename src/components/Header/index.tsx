@@ -22,7 +22,7 @@ export function Header() {
                     </ActiveLink>
 
                     <ActiveLink  activeClassName= {styles.active} href="/create-post" >
-                        <a><FiPlus size={22}/> Novo Post</a>
+                        <a><FiPlus size={22}/> Create</a>
                     </ActiveLink>
                 </nav>
 

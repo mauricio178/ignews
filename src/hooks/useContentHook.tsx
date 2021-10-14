@@ -42,7 +42,7 @@ function ContentProvider({ children }: ContentProviderProps) {
     }
     
     //função adicionando item
-    function addC() {
+    function addC() {        
         if (content.length === 0) {
             setContent([{ id: 1 }])
             return;
@@ -63,7 +63,7 @@ function ContentProvider({ children }: ContentProviderProps) {
     
     //função alterando o tipo do item
     function switchType(id: number, type: string) {
-
+        console.log(type, id)
         setContent(oldValue => {
             var filtered = oldValue.filter((data) => {
                 if (data.id === id) {

@@ -1,5 +1,6 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
-import { useContent } from "./useContentHook";
+import api from "../services/api";
+// import { api } from "../services/api";
 
 export type PostProps = {
     id?: number,
@@ -14,9 +15,14 @@ export type PostProps = {
 type AllPost = PostProps[]
 
 type PostContextData = {
-    post: AllPost
+    post: PostProps
+    postList: AllPost
     addPost: (postInfo: PostProps) => void
     removePost: (id: number) => void
+    editPost: (data: PostProps) => void
+    editPostInfo: (atribute: string, value: string) => void
+    updatePost: (data: PostProps) => void
+
 }
 
 type PostProviderProps = {
@@ -27,26 +33,55 @@ export const PostContext = createContext({} as PostContextData);
 
 function PostProvider({ children }: PostProviderProps) {
 
-    const [post, setPost] = useState<AllPost>([] as AllPost)
+    const [post, setPost] = useState<PostProps>()
+    const [postList, setPostList] = useState<AllPost>([] as AllPost)
 
-    // var postInfo = JSON.parse(localStorage.getItem('dados'))
-
-    //função removendo item
+    //função removendo Item
     function removePost(id: number) {
-        setPost(oldValue => {
-            var filtered = oldValue.filter((data) => {
-                return data.id !== id
+        var resultado = confirm(`Deletar Item Nº${id} da Lista?`);
+        if (resultado == true) {
+            var data = JSON.parse(localStorage.getItem("dados")) || {};
+            var filteredData = data.filter(item => item.id !== id)
+            localStorage.setItem("dados", JSON.stringify(filteredData));
+            setPostList(filteredData)
+            alert(`Item ${id} Excluído da Lista!`);
+        } else {
+            alert(`Ação cancelada!`);
 
-            });
-            return filtered;
+        }
+    }
+
+    //função passando as informações para o Formulário
+    function editPostInfo(atribute: string, value: string) {
+        setPost({
+            ...post,
+            [atribute]: value,
         })
     }
 
+
+    //função editando Post
+    function editPost(data: PostProps) {
+        setPost(data)
+    }
+
+    function updatePost(postData: PostProps) {
+        const posts = JSON.parse(localStorage.dados)
+            .map((item) => {
+                if (item.id === postData.id) {
+                    return postData
+                } else {
+                    return item
+                }
+            })
+        localStorage.setItem('dados', JSON.stringify(posts))
+    }
+
     //função adicionando item
-    function addPost(postInfo: PostProps) {
+    async function addPost(postInfo: PostProps) {
         try {
-            if (post.length === 0) {
-                setPost([{
+            if (postList.length === 0) {
+                var array = ([{
                     id: 1,
                     title: postInfo.title,
                     subtitle: postInfo.subtitle,
@@ -55,9 +90,20 @@ function PostProvider({ children }: PostProviderProps) {
                     content: postInfo.content,
                     baner: postInfo.baner
                 }])
+
+                api.post('blog/post', array)
+                    .then((res) => {
+                        console.log(res.data)
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+
+
+                localStorage.setItem('dados', JSON.stringify(array))
+                setPostList(array)
                 return;
             }
-            setPost(OldValue => {
+            setPostList(OldValue => {
                 let newId;
                 let i = 0;
 
@@ -77,9 +123,15 @@ function PostProvider({ children }: PostProviderProps) {
                     baner: postInfo.baner
                 }])
 
-                    console.log(array, 'array')
-                localStorage.setItem('dados', JSON.stringify(array))
+                api.post('blog/post', array)
+                    .then((res) => {
+                        console.log(res.data)
+                    }).catch((err) => {
+                        console.log(err)
+                    })
 
+                localStorage.setItem('dados', JSON.stringify(array))
+                
                 return array;
             })
 
@@ -89,7 +141,7 @@ function PostProvider({ children }: PostProviderProps) {
     }
 
     return (
-        <PostContext.Provider value={{ post, addPost, removePost }}>
+        <PostContext.Provider value={{ post, postList, addPost, removePost, editPost, editPostInfo, updatePost }}>
             {children}
         </PostContext.Provider>
     )

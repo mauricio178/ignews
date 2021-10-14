@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
-import React, { useState, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './styles.module.scss'
 import { FiCheck, FiFilm, FiImage, FiX } from "react-icons/fi";
 import { BiCarousel } from "react-icons/bi";
@@ -10,7 +10,7 @@ import { Carousel } from '../Carouselimg';
 import { useContent, ContentProps } from '../../hooks/useContentHook';
 
 
-export function Content(content: ContentProps) {
+export function ContentEdit(content: ContentProps) {
 
     const [paragraph, setParagraph] = useState<string>('');
     const [subtitleContent, setSubtitleContent] = useState<string>('');
@@ -98,6 +98,10 @@ export function Content(content: ContentProps) {
         switchContent(content.id, subtitleContent)
     }
 
+    useEffect(() => {
+        console.log(content.content)
+    }, [])
+
     return (
 
         <div className={styles.container}>
@@ -119,13 +123,13 @@ export function Content(content: ContentProps) {
             
             <div id={`content${content.id}`} className={styles.content}>
                 {
-                    content.content.type === "-" &&
+                    content.content === "-" &&
                     <div>
                         <div className={styles.none}><p>- selecione uma opção -</p></div>
                     </div>
                 }
                 {
-                    content.content.type === "Paragraph" &&
+                    content.content === "Paragraph" &&
                     <>
                         <textarea
                             value={paragraph}
@@ -140,7 +144,7 @@ export function Content(content: ContentProps) {
                     </>
                 }
                 {
-                    content.content.type === "Video" &&
+                    content.content === "Video" &&
                     <>
                         <div className={styles.video}>
                             <input type="file" accept="video/*" onChange={handleVideoSelect} />
@@ -172,7 +176,7 @@ export function Content(content: ContentProps) {
                     </>
                 }
                 {
-                    content.content.type === "Foto" &&
+                    content.content === "Foto" &&
                     <>
                         <div className={styles.foto}>
                             <input type="file" accept="image/*" onChange={handleFileSelect} />
@@ -208,7 +212,7 @@ export function Content(content: ContentProps) {
                     </>
                 }
                 {
-                    content.content.type === "Link" &&
+                    content.content === "Link" &&
                     <>
                         <div className={styles.link}>
                             <Input
@@ -225,7 +229,7 @@ export function Content(content: ContentProps) {
                     </>
                 }
                 {
-                    content.content.type === "Carousel" &&
+                    content.content === "Carousel" &&
                     <>
                         <div className={styles.carousel}>
                             <input type="file" accept="image/*" multiple onChange={handleSelectMultipleFiles} />
@@ -247,7 +251,7 @@ export function Content(content: ContentProps) {
                     </>
                 }
                 {
-                    content.content.type === "Subtitle" &&
+                    content.content === "Subtitle" &&
                     <>
                         <div className={styles.subtitleContent}>
                             <Input
