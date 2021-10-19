@@ -5,7 +5,7 @@ import styles from './styles.module.scss'
 type InputProps = {
     placeholder: string;
     type: string;
-    value: string;
+    value: string | [];
     onchange: any;
     textarea?: boolean;
     required?: boolean;

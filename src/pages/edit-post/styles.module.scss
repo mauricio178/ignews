@@ -199,6 +199,24 @@
             padding: 0rem 4rem;
             display: flex;
             align-items: center;
+
+            ul {
+                display: flex;
+                flex-direction: row;
+
+                li {
+                    padding: 0px 10px;
+                    list-style-type: none;
+
+                    &:hover{
+                        color: var(--blue-500);
+                        cursor: pointer;
+                    }
+
+
+
+                }
+            }
             p{  
                 color: white;
                 font-size: 1rem;

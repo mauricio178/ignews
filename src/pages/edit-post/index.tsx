@@ -58,11 +58,6 @@ export default function CreatePost() {
         setBaner(null);
     }
 
-    useEffect(() => {
-        console.log(post, "post")
-        console.log(content, "content")
-    }, [])
-
     return (
         <>
             <Head>
@@ -106,7 +101,7 @@ export default function CreatePost() {
                         <Input
                             placeholder="Tags da Postagem"
                             type="text"
-                            value={post.tags}
+                            value={JSON.stringify(post.tagsArray)}
                             onchange={(e: string) => editPostInfo("tags", e)}
                             required
                         />
@@ -221,9 +216,18 @@ export default function CreatePost() {
                                     })
                                 }
                                 <div className={styles.tags}>
-                                    <p>
-                                        <FiTag size={16} /> Tags: <span>{post.tags}</span>
-                                    </p>
+                                    <FiTag size={16} /> Tags:
+                                    <ul>
+                                        {
+                                            post.tagsArray.map((item, k) => {
+                                                return(
+                                                    <li key={k}>
+                                                        {item}
+                                                    </li>
+                                                )
+                                            })
+                                        }
+                                    </ul>
                                 </div>
                             </>
                             :

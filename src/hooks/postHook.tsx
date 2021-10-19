@@ -8,7 +8,7 @@ export type PostProps = {
     date: any,
     baner: any,
     subtitle: string,
-    tags: string
+    tagsArray: string[],
     content: any,
 }
 
@@ -85,21 +85,23 @@ function PostProvider({ children }: PostProviderProps) {
                     id: 1,
                     title: postInfo.title,
                     subtitle: postInfo.subtitle,
-                    tags: postInfo.tags,
+                    tagsArray: postInfo.tagsArray,
                     date: postInfo.date,
                     content: postInfo.content,
                     baner: postInfo.baner
                 }])
 
-                api.post('blog/post', array)
-                    .then((res) => {
-                        console.log(res.data)
-                    }).catch((err) => {
-                        console.log(err)
-                    })
+                // Send
+                // api.post('blog/post', array)
+                // .then((res) => {
+                //         console.log(res.data)
+                //     }).catch((err) => {
+                //         console.log(err)
+                //     })
 
 
                 localStorage.setItem('dados', JSON.stringify(array))
+                
                 setPostList(array)
                 return;
             }
@@ -117,20 +119,23 @@ function PostProvider({ children }: PostProviderProps) {
                     id: newId,
                     title: postInfo.title,
                     subtitle: postInfo.subtitle,
-                    tags: postInfo.tags,
+                    tagsArray: postInfo.tagsArray,
                     date: postInfo.date,
                     content: postInfo.content,
                     baner: postInfo.baner
                 }])
 
+                // Send
+
                 api.post('blog/post', array)
                     .then((res) => {
-                        console.log(res.data)
+                        console.log(res)
                     }).catch((err) => {
                         console.log(err)
                     })
 
                 localStorage.setItem('dados', JSON.stringify(array))
+                console.log(array)
                 
                 return array;
             })

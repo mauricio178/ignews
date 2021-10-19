@@ -8,7 +8,7 @@ import styles from './styles.module.scss';
 import { useContent } from "../../hooks/useContentHook";
 
 type CarouselProps = {
-    images: HTMLImageElement[],
+    images: File[],
 }
 
 export function Carousel({ images }: CarouselProps) {

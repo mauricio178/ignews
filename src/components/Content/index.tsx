@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { Input } from '../Input';
 import { Carousel } from '../Carouselimg';
 import { useContent, ContentProps } from '../../hooks/useContentHook';
+import api from '../../services/api';
 
 
 export function Content(content: ContentProps) {
@@ -15,9 +16,11 @@ export function Content(content: ContentProps) {
     const [paragraph, setParagraph] = useState<string>('');
     const [subtitleContent, setSubtitleContent] = useState<string>('');
     const [link, setLink] = useState<string>('');
-    const [photo, setPhoto] = useState<HTMLImageElement[]>();
-    const [carousel, setCarousel] = useState<HTMLImageElement[]>();
-    const [video, setVideo] = useState<HTMLVideoElement[]>();
+    const [photo, setPhoto] = useState<File>();
+    const [imageTitle, setImageTitle] = useState<string>('');
+    const [carousel, setCarousel] = useState<File[]>();
+    const [carouselTitle, setCarouselTitle] = useState<string>('');
+    const [video, setVideo] = useState<File[]>();
 
     const { removeC, switchContent, switchType } = useContent()
 
@@ -48,20 +51,21 @@ export function Content(content: ContentProps) {
 
         setCarousel(array)
 
+
     }
 
     function handleFileSelect(evt) {
-        const thisLength = evt.target.files.length;
-        if (thisLength === 0)
-            return;
+        // const thisLength = evt.target.files.length;
+        // if (thisLength === 0)
+        //     return;
 
-        var array = []
+        // var array = []
 
-        for (let i = 0; i < thisLength; i++) {
-            array.push(evt.target.files[i])
-        }
+        // for (let i = 0; i < thisLength; i++) {
+        //     array.push(evt.target.files[i])
+        // }
 
-        setPhoto(array)
+        setPhoto(evt.target.files)
     }
 
     function handleVideoSelect(evt) {
@@ -84,10 +88,41 @@ export function Content(content: ContentProps) {
 
     function handleSendPhoto() {
         switchContent(content.id, photo)
+        var form = new FormData();
+
+        console.log(photo)
+        form.append("image1", photo);
+        console.log(imageTitle)
+        form.append("title_image1", imageTitle);
+        console.log(form)
+       
+
+        api.post('blog/post', form, { headers: { "Enctype": "multipart/form-data" } })
+            .then((res) => {
+                console.log(res.data)
+                console.log(res)
+            }).catch((err) => {
+                console.log(err)
+            })
+        
     }
 
     function handleSendCarousel() {
-        switchContent(content.id, carousel)
+        var form = new FormData();
+        carousel.map((data) => {
+            return form.append("carousel1[]", data);
+        })
+
+        form.append("title_carousel1[]", carouselTitle)
+
+        console.log(form)
+        api.post('blog/post', form, { headers: { "Enctype": "multipart/form-data" } })
+            .then((res) => {
+                console.log(res.data)
+            }).catch((err) => {
+                console.log(err)
+            })
+        // switchContent(content.id, carousel)
     }
 
     function handleSendLink() {
@@ -116,7 +151,7 @@ export function Content(content: ContentProps) {
                     }
                 </select>
             </div>
-            
+
             <div id={`content${content.id}`} className={styles.content}>
                 {
                     content.content.type === "-" &&
@@ -160,7 +195,7 @@ export function Content(content: ContentProps) {
                                         </>
                                         :
                                         <div>
-                                            <FiFilm size={45}/>
+                                            <FiFilm size={45} />
                                         </div>
                                 }
                             </div>
@@ -179,27 +214,34 @@ export function Content(content: ContentProps) {
                             <div>
                                 {
                                     (photo !== null && photo !== undefined) ?
-                                    <>
-                                        {
-                                            photo.map((data, k) => {
-                                                return (
-                                                    <div key={k}>
-                                                        <img
-                                                            src={URL.createObjectURL(data)}
-                                                            alt={data.name}
-                                                        />
-                                                    </div>
-                                                )
-                                            })
-                                        }
-                                    </>
-                                    :
-                                    <div>
-                                        <FiImage size={45}/>
-                                    </div>
-
-
+                                        <>
+                                            {/* {
+                                                photo.map((data, k) => {
+                                                    return (
+                                                        <div key={k}> */}
+                                                            {/* <img
+                                                                src={URL.createObjectURL(photo)}
+                                                                alt={photo.name}
+                                                            /> */}
+                                                        {/* </div>
+                                                    )
+                                                })
+                                            } */}
+                                            <Input
+                                                placeholder="Título da Imagem"
+                                                type="text"
+                                                value={imageTitle}
+                                                onchange={(e: string) => setImageTitle(e)}
+                                                required
+                                            />
+                                        </>
+                                        :
+                                        <div>
+                                            <FiImage size={45} />
+                                        </div>
                                 }
+
+
                             </div>
                         </div>
                         <button onClick={handleSendPhoto}>
@@ -232,15 +274,25 @@ export function Content(content: ContentProps) {
                             <div>
                                 {
                                     (carousel !== null && carousel !== undefined) ?
-                                    <Carousel images={carousel} />
-                                    :
-                                    <div>
-                                        <BiCarousel size={45}/>
-                                    </div>
+                                        <>
+                                            <Carousel images={carousel} />
+                                            <Input
+                                                placeholder="Título do Carousel"
+                                                type="text"
+                                                value={carouselTitle}
+                                                onchange={(e: string) => setCarouselTitle(e)}
+                                                required
+                                            />
+                                        </>
+                                        :
+                                        <div>
+                                            <BiCarousel size={45} />
+                                        </div>
 
                                 }
                             </div>
                         </div>
+
                         <button onClick={handleSendCarousel}>
                             <FiCheck size={24} /> Adicionar Carousel ao Preview
                         </button>
