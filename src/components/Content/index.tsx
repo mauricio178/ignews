@@ -2,27 +2,37 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState, useRef } from 'react'
 import styles from './styles.module.scss'
-import { FiCheck, FiFilm, FiImage, FiX } from "react-icons/fi";
+import { FiCheck, FiFilm, FiImage, FiPlus, FiX } from "react-icons/fi";
 import { BiCarousel } from "react-icons/bi";
 import Image from 'next/image'
 import { Input } from '../Input';
 import { Carousel } from '../Carouselimg';
 import { useContent, ContentProps } from '../../hooks/useContentHook';
 import api from '../../services/api';
+import { usePost } from '../../hooks/postHook';
+import { ContentSection } from '../ContentSection';
+
+type AllContent = ContentProps[]
 
 
-export function Content(content: ContentProps) {
+export function Content(thisContent: ContentProps) {
 
     const [paragraph, setParagraph] = useState<string>('');
     const [subtitleContent, setSubtitleContent] = useState<string>('');
     const [link, setLink] = useState<string>('');
+
     const [photo, setPhoto] = useState<File>();
     const [imageTitle, setImageTitle] = useState<string>('');
+
     const [carousel, setCarousel] = useState<File[]>();
     const [carouselTitle, setCarouselTitle] = useState<string>('');
-    const [video, setVideo] = useState<File[]>();
 
-    const { removeC, switchContent, switchType } = useContent()
+    const [video, setVideo] = useState<File>();
+    const [videoTitle, setVideoTitle] = useState<string>('');
+
+    const [contentSection, setContentSection] = useState<AllContent>([] as AllContent)
+
+    const { removeContent, switchContent, switchType } = useContent()
 
     const list = [
         { id: "-", name: '-' },
@@ -34,8 +44,40 @@ export function Content(content: ContentProps) {
         { id: "Subtitle", name: 'Subtítulo' },
     ];
 
+    function switchContentSection(id: number, content: any) {
+        setContentSection(oldValue => {
+            var filtered = oldValue.filter((data) => {
+                if (data.id === id) {
+                    data.content = content
+                }
+                return data
+            });
+            return filtered;
+        })
+    }
+
+    function addContentSection() {
+        if (contentSection.length === 0) {
+            setContentSection([{ id: 1 }])
+            return;
+        }
+        setContentSection(OldValue => {
+            let newId;
+            let i = 0;
+
+            OldValue.map((data) => {
+                i++;
+                if (i === OldValue.length) {
+                    newId = data.id + 1;
+                }
+            })
+            console.log(contentSection)
+            return contentSection.concat([{ id: newId }])
+        })
+    }
+
     function handleSendParagraph() {
-        switchContent(content.id, paragraph)
+        switchContent(thisContent.id, paragraph)
     }
 
     function handleSelectMultipleFiles(evt) {
@@ -69,53 +111,78 @@ export function Content(content: ContentProps) {
     }
 
     function handleVideoSelect(evt) {
-        const thisLength = evt.target.files.length;
-        if (thisLength === 0)
-            return;
+        setVideo(evt.target.files[0])
+        console.log(evt.target.files[0])
+    }
 
-        var array = []
-
-        for (let i = 0; i < thisLength; i++) {
-            array.push(evt.target.files[i])
-        }
-
-        setVideo(array)
+    function handleRemoveContentSection(id: number) {
+        setContentSection(oldValue => {
+            var filtered = oldValue.filter((data) => {
+                return data.id !== id
+            });
+            return filtered;
+        })
     }
 
     function handleSendVideo() {
-        switchContent(content.id, video)
-    }
+        switchContent(thisContent.id, video)
 
-    function handleSendPhoto() {
-        switchContent(content.id, photo)
         var form = new FormData();
 
-        console.log(photo)
-        form.append("image1", photo);
-        console.log(imageTitle)
-        form.append("title_image1", imageTitle);
-        console.log(form)
-       
+        form.append("video1", video);
+        form.append("title_video1", videoTitle);
 
         api.post('blog/post', form, { headers: { "Enctype": "multipart/form-data" } })
             .then((res) => {
                 console.log(res.data)
-                console.log(res)
             }).catch((err) => {
                 console.log(err)
             })
-        
+    }
+
+    function handleSendPhoto() {
+        switchContent(thisContent.id, photo)
+
+        const template = [{
+            section: [
+                { subtitle: 'subtitleteste' },
+                { image: 'image1' },
+
+            ]
+        }]
+
+        var formData = new FormData();
+
+        formData.append('template', JSON.stringify(template));
+        formData.append('image1', photo);
+        formData.append('title_image1', imageTitle);
+
+        const testeData = {
+            image1: photo,
+            title_image1: imageTitle,
+            template: template
+        }
+
+        api.post('blog/post', formData, { headers: { "Enctype": "multipart/form-data" } })
+            .then((res) => {
+                console.log(res.data)
+            }).catch((err) => {
+                console.log(err)
+            })
     }
 
     function handleSendCarousel() {
-        var form = new FormData();
+
+        const form = new FormData();
+
         carousel.map((data) => {
             return form.append("carousel1[]", data);
         })
 
-        form.append("title_carousel1[]", carouselTitle)
+        form.append('title_carousel1[]', carouselTitle)
 
         console.log(form)
+
         api.post('blog/post', form, { headers: { "Enctype": "multipart/form-data" } })
             .then((res) => {
                 console.log(res.data)
@@ -126,24 +193,24 @@ export function Content(content: ContentProps) {
     }
 
     function handleSendLink() {
-        switchContent(content.id, link)
+        switchContent(thisContent.id, link)
     }
 
     function handleSendSubtitleContent() {
-        switchContent(content.id, subtitleContent)
+        switchContent(thisContent.id, subtitleContent)
     }
 
     return (
 
         <div className={styles.container}>
             <div>
-                <p>Conteúdo N°: {content.id}</p>
+                <p>Conteúdo N°: {thisContent.id}</p>
                 <h3>Selecione o tipo de Conteúdo </h3>
             </div>
 
 
             <div className={styles.selectRow}>
-                <select onChange={(e: any) => switchType(content.id, e.target.value)}>
+                <select onChange={(e: React.ChangeEvent<HTMLSelectElement>) => switchType(thisContent.id, e.target.value)}>
                     {
                         list.map((item, k) => (
                             <option key={k} value={item.id}>{item.name}</option>
@@ -152,15 +219,15 @@ export function Content(content: ContentProps) {
                 </select>
             </div>
 
-            <div id={`content${content.id}`} className={styles.content}>
+            <div id={`content${thisContent.id}`} className={styles.content}>
                 {
-                    content.content.type === "-" &&
+                    thisContent.content.type === "-" &&
                     <div>
                         <div className={styles.none}><p>- selecione uma opção -</p></div>
                     </div>
                 }
                 {
-                    content.content.type === "Paragraph" &&
+                    thisContent.content.type === "Paragraph" &&
                     <>
                         <textarea
                             value={paragraph}
@@ -175,7 +242,7 @@ export function Content(content: ContentProps) {
                     </>
                 }
                 {
-                    content.content.type === "Video" &&
+                    thisContent.content.type === "Video" &&
                     <>
                         <div className={styles.video}>
                             <input type="file" accept="video/*" onChange={handleVideoSelect} />
@@ -183,15 +250,20 @@ export function Content(content: ContentProps) {
                                 {
                                     (video !== null && video !== undefined) ?
                                         <>
-                                            {
-                                                video.map((data, k) => {
-                                                    return (
-                                                        <video key={k} width="320" height="240" controls>
-                                                            <source src={URL.createObjectURL(data)} />
-                                                        </video>
-                                                    )
-                                                })
-                                            }
+
+
+                                            {/* <video width="320" height="240" controls>
+                                                <source src={URL.createObjectURL(video)} />
+                                            </video> */}
+
+
+                                            <Input
+                                                placeholder="Título do Vídeo"
+                                                type="text"
+                                                value={videoTitle}
+                                                onchange={(e: string) => setVideoTitle(e)}
+                                                required
+                                            />
                                         </>
                                         :
                                         <div>
@@ -207,7 +279,7 @@ export function Content(content: ContentProps) {
                     </>
                 }
                 {
-                    content.content.type === "Foto" &&
+                    thisContent.content.type === "Foto" &&
                     <>
                         <div className={styles.foto}>
                             <input type="file" accept="image/*" onChange={handleFileSelect} />
@@ -219,11 +291,11 @@ export function Content(content: ContentProps) {
                                                 photo.map((data, k) => {
                                                     return (
                                                         <div key={k}> */}
-                                                            {/* <img
+                                            {/* <img
                                                                 src={URL.createObjectURL(photo)}
                                                                 alt={photo.name}
                                                             /> */}
-                                                        {/* </div>
+                                            {/* </div>
                                                     )
                                                 })
                                             } */}
@@ -250,7 +322,7 @@ export function Content(content: ContentProps) {
                     </>
                 }
                 {
-                    content.content.type === "Link" &&
+                    thisContent.content.type === "Link" &&
                     <>
                         <div className={styles.link}>
                             <Input
@@ -267,7 +339,7 @@ export function Content(content: ContentProps) {
                     </>
                 }
                 {
-                    content.content.type === "Carousel" &&
+                    thisContent.content.type === "Carousel" &&
                     <>
                         <div className={styles.carousel}>
                             <input type="file" accept="image/*" multiple onChange={handleSelectMultipleFiles} />
@@ -288,7 +360,6 @@ export function Content(content: ContentProps) {
                                         <div>
                                             <BiCarousel size={45} />
                                         </div>
-
                                 }
                             </div>
                         </div>
@@ -299,7 +370,7 @@ export function Content(content: ContentProps) {
                     </>
                 }
                 {
-                    content.content.type === "Subtitle" &&
+                    thisContent.content.type === "Subtitle" &&
                     <>
                         <div className={styles.subtitleContent}>
                             <Input
@@ -310,13 +381,35 @@ export function Content(content: ContentProps) {
                                 required
                             />
                         </div>
+
+                        <div>
+                            {
+                                contentSection.map((data, k) => {
+                                    return (
+                                        <div key={k}>
+                                            <ContentSection 
+                                            thisContent={data} 
+                                            setContentSection={setContentSection} />
+                                            <button onClick={() => handleRemoveContentSection(data.id)}>
+                                                <FiX size={24} /> Remover Item
+                                            </button>
+                                        </div>
+                                    )
+
+                                })
+                            }
+                        </div>
+
+                        <button onClick={addContentSection}>
+                            <FiPlus size={24} /> Conteudo à Sessão
+                        </button>
                         <button onClick={handleSendSubtitleContent}>
                             <FiCheck size={24} /> Adicionar Subtítulo ao Preview
                         </button>
                     </>
                 }
 
-                <button onClick={() => removeC(content.id)}>
+                <button onClick={() => removeContent(thisContent.id)}>
                     <FiX size={24} /> Remover Item
                 </button>
 

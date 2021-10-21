@@ -5,7 +5,6 @@ import api from "../services/api";
 export type PostProps = {
     id?: number,
     title: string,
-    date: any,
     baner: any,
     subtitle: string,
     tagsArray: string[],
@@ -86,7 +85,6 @@ function PostProvider({ children }: PostProviderProps) {
                     title: postInfo.title,
                     subtitle: postInfo.subtitle,
                     tagsArray: postInfo.tagsArray,
-                    date: postInfo.date,
                     content: postInfo.content,
                     baner: postInfo.baner
                 }])
@@ -120,7 +118,6 @@ function PostProvider({ children }: PostProviderProps) {
                     title: postInfo.title,
                     subtitle: postInfo.subtitle,
                     tagsArray: postInfo.tagsArray,
-                    date: postInfo.date,
                     content: postInfo.content,
                     baner: postInfo.baner
                 }])

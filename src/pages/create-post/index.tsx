@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { GetStaticProps } from 'next'
 import Head from 'next/head'
 import styles from './styles.module.scss'
 import Image from 'next/image'
@@ -17,7 +18,6 @@ export type PostFormData = {
     subtitle: string;
     tagsArray: string[];
     baner: any;
-    date?: Date;
 }
 
 export default function CreatePost() {
@@ -31,14 +31,7 @@ export default function CreatePost() {
 
     const [loading, setLoading] = useState(false);
 
-    // pegando a data atual (somente para visual de preview)
-    var dataAtual = new Date()
-    var dia = dataAtual.getDate()
-    var mes = dataAtual.getMonth()
-    var ano = dataAtual.getFullYear()
-    var meses = new Array('Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro')
-
-    const { addC, content } = useContent()
+    const { addContent, content } = useContent()
     const { addPost } = usePost()
 
     function handleSendPost() {
@@ -62,15 +55,12 @@ export default function CreatePost() {
 
             const tagsArray = tags.split(" ")
 
-            var date = [dia, mes, ano]
-
             var postInfo = {
                 title,
                 subtitle,
                 tagsArray,
                 content,
                 baner,
-                date
             }
 
             addPost(postInfo)
@@ -104,13 +94,14 @@ export default function CreatePost() {
             await api.post('blog/post', form, { headers: { "Enctype": "multipart/form-data" } })
                 .then((res) => {
                     console.log(res.data)
-                    console.log(res)
                     setLoading(false)
                     alert('Baner enviado!')
                 }).catch((err) => {
                     setLoading(false)
                     console.log(err)
                 })
+
+
         }
 
     }
@@ -119,6 +110,16 @@ export default function CreatePost() {
         setBaner(null)
     }
 
+    useEffect(() => {
+        const res = api.get('blog/category')
+            .then(res => console.log(res.data.data, "1"))
+            .catch(err => console.log(err))
+        
+        
+        
+
+
+    }, [])
 
     return (
         <>
@@ -185,6 +186,11 @@ export default function CreatePost() {
                             required
                         />
                     </div>
+                    <div>
+                        {
+                            
+                        }
+                    </div>
                     <div className={styles.globalContent}>
                         {
                             content.map((data, k) => {
@@ -197,7 +203,7 @@ export default function CreatePost() {
                         }
                     </div>
                     <div className={styles.buttons}>
-                        <button onClick={addC}>
+                        <button onClick={addContent}>
                             <FiPlus size={24} /> Adicionar Conteúdo
                         </button>
                     </div>
@@ -215,7 +221,6 @@ export default function CreatePost() {
                                 >
                                     <h1>{title}</h1>
                                     <h2>{subtitle}</h2>
-                                    <p><FiWatch size={18} /> Publicado em: <strong>{dia} de {meses[mes]} de {ano}</strong></p>
                                 </article>
                                 {/* {
                                     content.map((data, k) => {
@@ -313,5 +318,16 @@ export default function CreatePost() {
             </main>
         </>
     )
+}
+
+
+export async function getStaticProps() {
+
+
+    return {
+        props: {
+            
+        },
+    }
 }
 

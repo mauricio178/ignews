@@ -16,10 +16,10 @@ export function ContentEdit(content: ContentProps) {
     const [subtitleContent, setSubtitleContent] = useState<string>('');
     const [link, setLink] = useState<string>('');
     const [photo, setPhoto] = useState<HTMLImageElement[]>();
-    const [carousel, setCarousel] = useState<HTMLImageElement[]>();
+    const [carousel, setCarousel] = useState<File[]>();
     const [video, setVideo] = useState<HTMLVideoElement[]>();
 
-    const { removeC, switchContent, switchType } = useContent()
+    const { removeContent, switchContent, switchType } = useContent()
 
     const list = [
         { id: "-", name: '-' },
@@ -268,7 +268,7 @@ export function ContentEdit(content: ContentProps) {
                     </>
                 }
 
-                <button onClick={() => removeC(content.id)}>
+                <button onClick={() => removeContent(content.id)}>
                     <FiX size={24} /> Remover Item
                 </button>
 

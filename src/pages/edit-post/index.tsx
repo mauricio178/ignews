@@ -33,7 +33,7 @@ export default function CreatePost() {
     var ano = dataAtual.getFullYear()
     var meses = new Array('Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro')
 
-    const { content, addC } = useContent()
+    const { content, addContent } = useContent()
     const { editPostInfo, updatePost, post } = usePost()
 
     function handleSaveChanges() {
@@ -118,7 +118,7 @@ export default function CreatePost() {
                         }
                     </div>
                     <div className={styles.buttons}>
-                        <button onClick={addC}>
+                        <button onClick={addContent}>
                             <FiPlus size={24} /> Adicionar Conteúdo
                         </button>
                     </div>

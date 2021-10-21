@@ -12,12 +12,16 @@ export type ContentProps = {
 type AllContent = ContentProps[]
 
 type ContentContextData = {
-    content: AllContent
-    addC: () => void
-    removeC: (id: number) => void
+    content: AllContent,
+    // contentSection: AllContent,
+    addContent: () => void
+    // addContentSection: () => void
+    removeContent: (id: number) => void
+    // removeContentSection: (id: number) => void
     switchType: (id: number, type: any) => void
+    // switchTypeSection: (id: number, type: any) => void
     switchContent: (id: number, content: any) => void
-
+    // switchContentSection: (id: number, content: any) => void
 }
 
 type ContentProviderProps = {
@@ -29,20 +33,21 @@ export const ContentContext = createContext({} as ContentContextData);
 function ContentProvider({ children }: ContentProviderProps) {
 
     const [content, setContent] = useState<AllContent>([] as AllContent)
+    // const [contentSection, setContentSection] = useState<AllContent>([] as AllContent)
 
     //função removendo item
-    function removeC(id: number) {
+    function removeContent(id: number) {
         setContent(oldValue => {
             var filtered = oldValue.filter((data) => {
                 return data.id !== id
-                
+
             });
             return filtered;
         })
     }
-    
-    //função adicionando item
-    function addC() {        
+
+    //função adicionando conteúdo no Post
+    function addContent() {
         if (content.length === 0) {
             setContent([{ id: 1 }])
             return;
@@ -60,7 +65,7 @@ function ContentProvider({ children }: ContentProviderProps) {
             return content.concat([{ id: newId }])
         })
     }
-    
+
     //função alterando o tipo do item
     function switchType(id: number, type: string) {
         console.log(type, id)
@@ -74,7 +79,7 @@ function ContentProvider({ children }: ContentProviderProps) {
             return filtered;
         })
     }
-    
+
     //função alterando o conteúdo do item
     function switchContent(id: number, content: any) {
         setContent(oldValue => {
@@ -89,10 +94,14 @@ function ContentProvider({ children }: ContentProviderProps) {
     }
 
 
-  
-
     return (
-        <ContentContext.Provider value={{ content, addC, removeC, switchType, switchContent }}>
+        <ContentContext.Provider value={{
+            content,
+            addContent,
+            removeContent,
+            switchType,
+            switchContent,
+        }}>
             {children}
         </ContentContext.Provider>
     )
